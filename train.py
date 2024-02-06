@@ -152,7 +152,7 @@ def get_or_build_tokenizer(config, ds,):
 def get_ds(config):
     # It only has the train split, so we divide it overselves
     ds_raw = load_dataset("HausaNLP/HausaVG", split='train+validation+test+challenge_test')
-    print(ds_raw[0])
+    # print(ds_raw[0])
   
     # Build tokenizers
     # tokenizer_src = get_or_build_tokenizer(config, ds_raw, config['lang_src'])
@@ -290,10 +290,6 @@ def train_model(config):
         avg_val_loss = eval_loss / len(val_dataloader)
         print(f'Epoch {epoch},Validation Loss: {avg_val_loss.item()}')
 
-
-        # Run validation at the end of every epoch
-        run_validation(model, val_dataloader, tokenizer_src, tokenizer_tgt, config['seq_len'], device, lambda msg: batch_iterator.write(msg), global_step)
-
         # Save the model at the end of every epoch
         model_filename = get_weights_file_path(config, f"{epoch:02d}")
         torch.save({
@@ -302,6 +298,11 @@ def train_model(config):
             'optimizer_state_dict': optimizer.state_dict(),
             'global_step': global_step
         }, model_filename)
+
+        # Run validation at the end of every epoch
+        run_validation(model, val_dataloader, tokenizer_src, tokenizer_tgt, config['seq_len'], device, lambda msg: batch_iterator.write(msg), global_step)
+
+     
 
 
 if __name__ == '__main__':
