@@ -126,8 +126,9 @@ class PatchEmbed(nn.Module):
 
         ],
         dim = 1)
+        encoder_mask = (x != 0).int()
         print(f' input shape {x.shape}')
-        return x
+        return x, encoder_mask
 
 class MultiHeadAttention(nn.Module):
     def __init__(self, d_model:int, heads: int) -> None:
@@ -278,7 +279,7 @@ class Decoder(nn.Module):
 
 
 class Transformer(nn.Module):
-    def __init__(self, seq_len:int, batch:int, d_model:int,target_vocab_size:int, source_vocab_size:int, head: int = 8, d_ff: int =  2048, number_of_block: int = 6) -> None:
+    def __init__(self, seq_len:int, batch:int, d_model:int,source_vocab_size:int, head: int = 8, d_ff: int =  2048, number_of_block: int = 6) -> None:
         super(Transformer, self).__init__()
     
        
@@ -291,16 +292,15 @@ class Transformer(nn.Module):
         # decoder_layer = nn.TransformerDecoderLayer(d_model=512, nhead=8, batch_first=True)
         # self.decoder = nn.TransformerDecoder(decoder_layer, num_layers=6)
         self.projection = ProjectionLayer(d_model, target_vocab_size)
-        self.source_embedding = InputEmbeddings(d_model,source_vocab_size )
         self.target_embedding = InputEmbeddings(d_model,target_vocab_size)
         self.positional_encoding = PositionEncoding(seq_len, d_model, batch)
 
    
-    def encode(self,x, src_mask):
-        x = patch_embeddings(x)
+    def encode(self,x):
+        x, src_mask = patch_embeddings(x)
         # x = self.source_embedding(x)
         # x = self.positional_encoding(x)
-        return self.encoder(x, src_mask)
+        return self.encoder(x, src_mask), src_mask
        
     def decode(self,x, src_mask, tgt_mask, encoder_output):
         x = self.target_embedding(x)
@@ -312,10 +312,10 @@ class Transformer(nn.Module):
         
 
 
-def build_transformer(seq_len, batch, target_vocab_size, source_vocab_size,  d_model)-> Transformer:
+def build_transformer(seq_len, batch, source_vocab_size,  d_model)-> Transformer:
     
 
-    transformer = Transformer(seq_len, batch,  d_model,  target_vocab_size, source_vocab_size )
+    transformer = Transformer(seq_len, batch,  d_model, source_vocab_size )
 
       #Initialize the parameters
     for p in transformer.parameters():
