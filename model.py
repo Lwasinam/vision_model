@@ -297,7 +297,7 @@ class Transformer(nn.Module):
 
    
     def encode(self,x):
-        x, src_mask = patch_embeddings(x)
+        x, src_mask = self.patch_embeddings(x)
         # x = self.source_embedding(x)
         # x = self.positional_encoding(x)
         return self.encoder(x, src_mask), src_mask
