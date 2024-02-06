@@ -258,6 +258,7 @@ def train_model(config):
 
             # Log the loss
             writer.add_scalar('train loss', loss.item(), global_step)
+            wandb.log({"Training Loss": loss.item(), "Global Step": global_step})
             writer.flush()
 
             # Backpropagate the loss
@@ -298,6 +299,7 @@ def train_model(config):
                 
         avg_val_loss = eval_loss / len(val_dataloader)
         print(f'Epoch {epoch},Validation Loss: {avg_val_loss.item()}')
+        wandb.log({"Validation Loss": avg_val_loss.item(), "Global Step": global_step})
 
         # Save the model at the end of every epoch
         model_filename = get_weights_file_path(config, f"{epoch:02d}")
