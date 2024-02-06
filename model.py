@@ -6,6 +6,8 @@ import torch.nn as nn
 import math
 import torch.nn.functional as F
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 class InputEmbeddings(nn.Module):
     def __init__(self, d_model: int, vocab_size: int) -> None:
         super(InputEmbeddings, self).__init__()
@@ -119,14 +121,14 @@ class PatchEmbed(nn.Module):
         x = x.transpose(1, 2) # (n_samples, n_patches, embed_dim)
         x = x + self.pos_embed  # Learnable pos embed -> (n_samples, n_patches_embed_dim) 
         # pad with zeros to match decoder side
-        pad = torch.zeros(x.size(0), 60, x.size(2))
+        pad = torch.zeros(x.size(0), 60, x.size(2)).to(device)
         x = torch.cat([
             x,
             pad,
 
         ],
         dim = 1)
-        encoder_mask = (x != 0).int()
+        encoder_mask = (x != 0).int().to(device)
         print(f' input shape {x.shape}')
         return x, encoder_mask
 
