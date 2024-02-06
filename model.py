@@ -130,6 +130,7 @@ class PatchEmbed(nn.Module):
         dim = 1)
         encoder_mask = (x != 0).int().to(device)
         print(f' input shape {x.shape}')
+        print(f' encoder mask shape {encoder_mask.shape}')
         return x, encoder_mask
 
 class MultiHeadAttention(nn.Module):
