@@ -23,7 +23,7 @@ from tokenizers.pre_tokenizers import Whitespace
 import torchmetrics
 from torch.utils.tensorboard import SummaryWriter
 
-def greedy_decode(model, source, source_mask, tokenizer_src, tokenizer_tgt, max_len, device):
+def greedy_decode(model, source, source_mask, tokenizer_tgt, max_len, device):
     sos_idx = tokenizer_tgt.token_to_id("[SOS]")
     eos_idx = tokenizer_tgt.token_to_id("[EOS]")
 
@@ -56,7 +56,7 @@ def greedy_decode(model, source, source_mask, tokenizer_src, tokenizer_tgt, max_
     return decoder_input.squeeze(0)
 
 
-def run_validation(model, validation_ds, tokenizer_src, tokenizer_tgt, max_len, device, print_msg, global_step,num_examples=2):
+def run_validation(model, validation_ds, tokenizer_tgt, max_len, device, print_msg, global_step,num_examples=2):
     model.eval()
     count = 0
 
@@ -83,19 +83,19 @@ def run_validation(model, validation_ds, tokenizer_src, tokenizer_tgt, max_len, 
             assert encoder_input.size(
                 0) == 1, "Batch size must be 1 for validation"
 
-            model_out = greedy_decode(model, encoder_input, encoder_mask, tokenizer_src, tokenizer_tgt, max_len, device)
+            model_out = greedy_decode(model, encoder_input, encoder_mask, tokenizer_tgt, max_len, device)
 
-            source_text = batch["src_text"][0]
+            # source_text = batch["src_text"][0]
             target_text = batch["tgt_text"][0]
             model_out_text = tokenizer_tgt.decode(model_out.detach().cpu().numpy())
 
-            source_texts.append(source_text)
+            # source_texts.append(source_text)
             expected.append(target_text)
             predicted.append(model_out_text)
             
             # Print the source, target and model output
             print_msg('-'*console_width)
-            print_msg(f"{f'SOURCE: ':>12}{source_text}")
+            # print_msg(f"{f'SOURCE: ':>12}{source_text}")
             print_msg(f"{f'TARGET: ':>12}{target_text}")
             print_msg(f"{f'PREDICTED: ':>12}{model_out_text}")
 
@@ -191,6 +191,13 @@ def get_model(config,  vocab_tgt_len):
     return model
 
 def train_model(config):
+    wandb.login(key = 'c20a1022142595d7d1324fdc53b3ccb34c0ded22')
+    wandb.init(project="Vision", name=config['project_name'])
+
+    # Initialize WandB configuration
+    wandb.config.epochs = config['num_epochs']
+    wandb.config.batch_size = config['batch_size']
+    wandb.config.learning_rate = config['lr'] 
     # Define the device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("Using device:", device)
@@ -300,7 +307,7 @@ def train_model(config):
         }, model_filename)
 
         # Run validation at the end of every epoch
-        run_validation(model, val_dataloader, tokenizer_src, tokenizer_tgt, config['seq_len'], device, lambda msg: batch_iterator.write(msg), global_step)
+        run_validation(model, val_dataloader, tokenizer_tgt, config['seq_len'], device, lambda msg: batch_iterator.write(msg), global_step)
 
      
 

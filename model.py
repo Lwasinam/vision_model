@@ -129,8 +129,8 @@ class PatchEmbed(nn.Module):
         ],
         dim = 1)
         encoder_mask = (x != 0).int().to(device)
-        print(f' input shape {x.shape}')
-        print(f' encoder mask shape {encoder_mask.shape}')
+        # print(f' input shape {x.shape}')
+        # print(f' encoder mask shape {encoder_mask.shape}')
         return x
 class MultiHeadAttention(nn.Module):
     def __init__(self, d_model:int, heads: int) -> None:
@@ -159,8 +159,8 @@ class MultiHeadAttention(nn.Module):
         
         attention = query @ key.transpose(3,2)
         attention = attention / math.sqrt(query.shape[-1])
-        print(f' attention shape {attention.shape}')
-        print(f' mask shape {mask.shape}')
+        # print(f' attention shape {attention.shape}')
+        # print(f' mask shape {mask.shape}')
 
         if mask is not None:
            attention = attention.masked_fill((attention != 0).int().to(device) == 0, -1e9)      
