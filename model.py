@@ -160,6 +160,8 @@ class MultiHeadAttention(nn.Module):
         
         attention = query @ key.transpose(3,2)
         attention = attention / math.sqrt(query.shape[-1])
+        print(f' attention shape {attention.shape}')
+        print(f' mask shape {mask.shape}')
 
         if mask is not None:
            attention = attention.masked_fill(mask == 0, -1e9)      
