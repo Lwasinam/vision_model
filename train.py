@@ -32,7 +32,7 @@ def greedy_decode(model, source, source_mask, tokenizer_tgt, max_len, device):
     # Precompute the encoder output and reuse it for every step
     encoder_output = model.encode(source, source_mask)
     # Initialize the decoder input with the sos token
-    decoder_input = torch.empty(1, 1).fill_(sos_idx).type_as(source).to(device)
+    decoder_input = torch.empty(1, 1).fill_(sos_idx).long().to(device)
     while True:
         if decoder_input.size(1) == max_len:
             break
@@ -233,6 +233,7 @@ def train_model(config):
         model.train()
         batch_iterator = tqdm(train_dataloader, desc=f"Processing Epoch {epoch:02d}")
         for batch in batch_iterator:
+            run_validation(model, val_dataloader, tokenizer_tgt, config['seq_len'], device, lambda msg: batch_iterator.write(msg), global_step)
             optimizer.zero_grad()
 
             encoder_input = batch['encoder_input'].to(device) # (b, seq_len)
