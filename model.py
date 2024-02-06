@@ -279,7 +279,7 @@ class Decoder(nn.Module):
 
 
 class Transformer(nn.Module):
-    def __init__(self, seq_len:int, batch:int, d_model:int,source_vocab_size:int, head: int = 8, d_ff: int =  2048, number_of_block: int = 3, imgSize: int = 224, patch_size: int = 16) -> None:
+    def __init__(self, seq_len:int, batch:int, d_model:int,target_vocab_size:int, head: int = 8, d_ff: int =  2048, number_of_block: int = 3, imgSize: int = 224, patch_size: int = 16) -> None:
         super(Transformer, self).__init__()
     
        
@@ -312,10 +312,10 @@ class Transformer(nn.Module):
         
 
 
-def build_transformer(seq_len, batch, source_vocab_size,  d_model)-> Transformer:
+def build_transformer(seq_len, batch, target_vocab_size,  d_model)-> Transformer:
     
 
-    transformer = Transformer(seq_len, batch,  d_model, source_vocab_size )
+    transformer = Transformer(seq_len, batch,  d_model, target_vocab_size )
 
       #Initialize the parameters
     for p in transformer.parameters():
