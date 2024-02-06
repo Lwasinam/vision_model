@@ -279,13 +279,13 @@ class Decoder(nn.Module):
 
 
 class Transformer(nn.Module):
-    def __init__(self, seq_len:int, batch:int, d_model:int,source_vocab_size:int, head: int = 8, d_ff: int =  2048, number_of_block: int = 6) -> None:
+    def __init__(self, seq_len:int, batch:int, d_model:int,source_vocab_size:int, head: int = 8, d_ff: int =  2048, number_of_block: int = 3, imgSize: int = 224, patch_size: int = 16) -> None:
         super(Transformer, self).__init__()
     
        
         self.encoder = Encoder(number_of_block,d_model, head, d_ff )
         self.decoder = Decoder(number_of_block, d_model, head, d_ff )
-        self.patch_embeddings = PatchEmbedding(imgSize, patch_size)
+        self.patch_embeddings = PatchEmbed(imgSize, patch_size)
         # encoder_layer = nn.TransformerEncoderLayer(d_model=512, nhead=8, batch_first=True)
         # self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=6)
 
