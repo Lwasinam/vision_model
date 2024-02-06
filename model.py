@@ -131,8 +131,7 @@ class PatchEmbed(nn.Module):
         encoder_mask = (x != 0).int().to(device)
         print(f' input shape {x.shape}')
         print(f' encoder mask shape {encoder_mask.shape}')
-        return x, encoder_mask
-
+        return x
 class MultiHeadAttention(nn.Module):
     def __init__(self, d_model:int, heads: int) -> None:
         super(MultiHeadAttention,self).__init__()
@@ -164,7 +163,7 @@ class MultiHeadAttention(nn.Module):
         print(f' mask shape {mask.shape}')
 
         if mask is not None:
-           attention = attention.masked_fill(mask == 0, -1e9)      
+           attention = attention.masked_fill((attention != 0).int().to(device) == 0, -1e9)      
         attention = torch.softmax(attention, dim=-1)      
         if dropout is not None:
             attention = dropout(attention)
@@ -301,11 +300,11 @@ class Transformer(nn.Module):
         self.positional_encoding = PositionEncoding(seq_len, d_model, batch)
 
    
-    def encode(self,x):
-        x, src_mask = self.patch_embeddings(x)
+    def encode(self,x, src_mask):
+        x  = self.patch_embeddings(x)
         # x = self.source_embedding(x)
         # x = self.positional_encoding(x)
-        return self.encoder(x, src_mask), src_mask
+        return self.encoder(x, src_mask)
        
     def decode(self,x, src_mask, tgt_mask, encoder_output):
         x = self.target_embedding(x)
