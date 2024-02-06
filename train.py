@@ -227,13 +227,13 @@ def train_model(config):
             optimizer.zero_grad()
 
             encoder_input = batch['encoder_input'].to(device) # (b, seq_len)
-            decoder_input, encoder_mask = batch['decoder_input'].to(device) # (B, seq_len)
+            decoder_input= batch['decoder_input'].to(device) # (B, seq_len)
             # encoder_mask = batch['encoder_mask'].to(device) # (B, 1, 1, seq_len)
             decoder_mask = batch['decoder_mask'].to(device) # (B, 1, seq_len, seq_len)
 
             # Run the tensors through the encoder, decoder and the projection layer
            
-            encoder_output = model.encode(encoder_input) # (B, seq_len, d_model)
+            encoder_output,  encoder_mask  = model.encode(encoder_input) # (B, seq_len, d_model)
             decoder_output = model.decode( decoder_input,encoder_mask,  decoder_mask, encoder_output) # (B, seq_len, d_model)
             proj_output = model.project(decoder_output)
            
