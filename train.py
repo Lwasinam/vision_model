@@ -30,7 +30,7 @@ def greedy_decode(model, source, source_mask, tokenizer_tgt, max_len, device):
     eos_idx = tokenizer_tgt.token_to_id("[EOS]")
 
     # Precompute the encoder output and reuse it for every step
-    encoder_output = model.encode(source, source_mask)
+    encoder_output = model.encode(source, None)
     # Initialize the decoder input with the sos token
     decoder_input = torch.empty(1, 1).fill_(sos_idx).long().to(device)
     while True:
@@ -41,7 +41,7 @@ def greedy_decode(model, source, source_mask, tokenizer_tgt, max_len, device):
       
 
         # calculate output
-        out =model.decode(decoder_input,source_mask,  decoder_mask, encoder_output)
+        out =model.decode(decoder_input,None,  decoder_mask, encoder_output)
      
 
         # get next token
@@ -85,7 +85,7 @@ def run_validation(model, validation_ds, tokenizer_tgt, max_len, device, print_m
             assert encoder_input.size(
                 0) == 1, "Batch size must be 1 for validation"
 
-            model_out = greedy_decode(model, encoder_input, encoder_mask, tokenizer_tgt, max_len, device)
+            model_out = greedy_decode(model, encoder_input, None, tokenizer_tgt, max_len, device)
 
             # source_text = batch["src_text"][0]
             target_text = batch["tgt_text"][0]
@@ -243,8 +243,8 @@ def train_model(config):
 
             # Run the tensors through the encoder, decoder and the projection layer
            
-            encoder_output = model.encode(encoder_input, encoder_mask) # (B, seq_len, d_model)
-            decoder_output = model.decode( decoder_input,encoder_mask,  decoder_mask, encoder_output) # (B, seq_len, d_model)
+            encoder_output = model.encode(encoder_input, None) # (B, seq_len, d_model)
+            decoder_output = model.decode( decoder_input,None,  decoder_mask, encoder_output) # (B, seq_len, d_model)
             proj_output = model.project(decoder_output)
            
              # (B, seq_len, vocab_size)
@@ -284,8 +284,8 @@ def train_model(config):
 
                 # Run the tensors through the encoder, decoder and the projection layer
             
-                encoder_output = model.encode(encoder_input, encoder_mask) # (B, seq_len, d_model)
-                decoder_output = model.decode( decoder_input,encoder_mask,  decoder_mask, encoder_output) # (B, seq_len, d_model)
+                encoder_output = model.encode(encoder_input, None) # (B, seq_len, d_model)
+                decoder_output = model.decode( decoder_input,None,  decoder_mask, encoder_output) # (B, seq_len, d_model)
                 proj_output = model.project(decoder_output)
             
                 # (B, seq_len, vocab_size)
