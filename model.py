@@ -283,7 +283,7 @@ class Decoder(nn.Module):
 
 
 class Transformer(nn.Module):
-    def __init__(self, seq_len:int, batch:int, d_model:int,target_vocab_size:int, head: int = 8, d_ff: int =  2048, number_of_block: int = 3, imgSize: int = 224, patch_size: int = 16) -> None:
+    def __init__(self, seq_len:int, batch:int, d_model:int,target_vocab_size:int, head: int = 8, d_ff: int =  2048, number_of_block: int = 4, imgSize: int = 224, patch_size: int = 16) -> None:
         super(Transformer, self).__init__()
     
        
