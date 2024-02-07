@@ -92,6 +92,8 @@ class PatchEmbed(nn.Module):
         self.pos_embed = nn.Parameter(
                 torch.zeros(1, self.n_patches, embed_dim)
         )
+         # Adding CLS token as a learnable parameter
+        self.cls_token = nn.Parameter(torch.zeros(1, 1, embed_dim))
 
 
         self.proj = nn.Conv2d(
@@ -119,18 +121,11 @@ class PatchEmbed(nn.Module):
             )  # (n_samples, embed_dim, n_patches ** 0.5, n_patches ** 0.5)
         x = x.flatten(2)  # (n_samples, embed_dim, n_patches)
         x = x.transpose(1, 2) # (n_samples, n_patches, embed_dim)
+        batch_size = x.shape[0]
+        cls_tokens = self.cls_token.expand(batch_size, -1, -1)  # Expand CLS tokens for the batch
+        x = torch.cat([cls_tokens, x], dim=1)
         x = x + self.pos_embed  # Learnable pos embed -> (n_samples, n_patches_embed_dim) 
-        # pad with zeros to match decoder side
-        pad = torch.zeros(x.size(0), 60, x.size(2)).to(device)
-        x = torch.cat([
-            x,
-            pad,
-
-        ],
-        dim = 1)
-        encoder_mask = (x != 0).int().to(device)
-        # print(f' input shape {x.shape}')
-        # print(f' encoder mask shape {encoder_mask.shape}')
+    
         return x
 class MultiHeadAttention(nn.Module):
     def __init__(self, d_model:int, heads: int) -> None:
