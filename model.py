@@ -179,14 +179,14 @@ class MultiHeadAttention(nn.Module):
 class FeedForward(nn.Module):
     def __init__(self,d_model:int, d_ff:int ) -> None:
         super(FeedForward, self).__init__()
-
+        self.act = nn.GELU()
         self.fc1 = nn.Linear(d_model, d_ff)  # Fully connected layer 1
         self.dropout = nn.Dropout(p=0.1)  # Dropout layer
         self.fc2 = nn.Linear(d_ff, d_model)  # Fully connected layer 2
      
     
     def forward(self,x ):
-        return self.fc2(self.dropout(torch.relu(self.fc1(x))))  
+        return self.fc2(self.dropout(self.act(self.fc1(x))))  
 
 class ProjectionLayer(nn.Module):
     def __init__(self, d_model:int, vocab_size:int) :
@@ -278,7 +278,7 @@ class Decoder(nn.Module):
 
 
 class Transformer(nn.Module):
-    def __init__(self, seq_len:int, batch:int, d_model:int,target_vocab_size:int, head: int = 8, d_ff: int =  2048, number_of_block: int = 4, imgSize: int = 224, patch_size: int = 14) -> None:
+    def __init__(self, seq_len:int, batch:int, d_model:int,target_vocab_size:int, head: int = 8, d_ff: int =  2048, number_of_block: int = 6, imgSize: int = 224, patch_size: int = 14) -> None:
         super(Transformer, self).__init__()
     
        
