@@ -26,6 +26,7 @@ import matplotlib.pyplot as plt
 
 import wandb
 from torch.utils.tensorboard import SummaryWriter
+# from accelerate import Accelerator
 
 def greedy_decode(model, source, source_mask, tokenizer_tgt, max_len, device):
     sos_idx = tokenizer_tgt.token_to_id("[SOS]")
@@ -60,7 +61,7 @@ def greedy_decode(model, source, source_mask, tokenizer_tgt, max_len, device):
     return decoder_input.squeeze(0)
 
 
-def run_validation(model, validation_ds, tokenizer_tgt, max_len, device, print_msg, global_step,num_examples=2):
+def run_validation(model, validation_ds, tokenizer_tgt, max_len, device, print_msg, global_step,num_examples=3):
     model.eval()
     count = 0
 
