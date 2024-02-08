@@ -148,7 +148,7 @@ def plot_grad_flow(named_parameters):
     plt.grid(True)
 def batch_iterator(data):
     for i in range(0, len(data)):
-        yield data[i]['en_text'] 
+        yield data[i]['text'] 
 
 # Assuming batch_iterator is a function that yields batches
 def tqdm_batch_iterator(data, *args, **kwargs):
@@ -170,9 +170,9 @@ def get_or_build_tokenizer(config, ds,):
 
 def get_ds(config):
     # It only has the train split, so we divide it overselves
-    # ds_raw = load_dataset(path="youssef101/artelingo", name='artelingo', splits=['val','test'])
-    # ds_raw = concatenate_datasets([ds_raw['val'], ds_raw['test']])
-    ds_raw = load_dataset("HausaNLP/HausaVG", split='train+validation+test+challenge_test')
+    ds_raw = load_dataset(path="youssef101/artelingo", name='artelingo', splits=['val','test'])
+    ds_raw = concatenate_datasets([ds_raw['val'], ds_raw['test']])
+    # ds_raw = load_dataset("HausaNLP/HausaVG", split='train+validation+test+challenge_test')
     # print(ds_raw[0])
   
     # Build tokenizers
