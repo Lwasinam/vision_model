@@ -29,7 +29,7 @@ class PositionEncoding(nn.Module):
         # self.seq_len = seq_len
         # self.d_model = d_model
         # self.batch = batch
-        self.dropout = nn.Dropout(p=0.1)
+        self.dropout = nn.Dropout(p=0.3)
     
         ##initialize the positional encoding with zeros
         positional_encoding = torch.zeros(seq_len, d_model)
@@ -181,7 +181,7 @@ class FeedForward(nn.Module):
         super(FeedForward, self).__init__()
         self.act = nn.GELU()
         self.fc1 = nn.Linear(d_model, d_ff)  # Fully connected layer 1
-        self.dropout = nn.Dropout(p=0.1)  # Dropout layer
+        self.dropout = nn.Dropout(p=0.3)  # Dropout layer
         self.fc2 = nn.Linear(d_ff, d_model)  # Fully connected layer 2
      
     
@@ -201,11 +201,11 @@ class EncoderBlock(nn.Module):
         super(EncoderBlock, self).__init__()    
         self.multiheadattention = MultiHeadAttention(d_model,head)
         self.layer_norm1 = nn.LayerNorm(d_model)
-        self.dropout1 = nn.Dropout(p=0.1)
+        self.dropout1 = nn.Dropout(p=0.3)
         self.feedforward = FeedForward(d_model, d_ff)
         self.layer_norm2 = nn.LayerNorm(d_model)
         self.layer_norm3 = nn.LayerNorm(d_model)
-        self.dropout2 = nn.Dropout(p=0.1)
+        self.dropout2 = nn.Dropout(p=0.3)
 
     def forward(self, x, src_mask):
        # Self-attention block
@@ -245,8 +245,8 @@ class DecoderBlock(nn.Module):
         self.layer_norm2 = nn.LayerNorm(d_model)
         self.layer_norm3 = nn.LayerNorm(d_model)
         self.layer_norm4 = nn.LayerNorm(d_model)
-        self.dropout2 = nn.Dropout(p=0.1)
-        self.dropout3 = nn.Dropout(p=0.1)
+        self.dropout2 = nn.Dropout(p=0.3)
+        self.dropout3 = nn.Dropout(p=0.3)
     def forward(self, x, src_mask, tgt_mask, encoder_output):
         #Self-attention block
         norm = self.layer_norm1(x)
@@ -278,7 +278,7 @@ class Decoder(nn.Module):
 
 
 class Transformer(nn.Module):
-    def __init__(self, seq_len:int, batch:int, d_model:int,target_vocab_size:int, head: int = 8, d_ff: int =  2048, number_of_block: int = 6, imgSize: int = 224, patch_size: int = 14) -> None:
+    def __init__(self, seq_len:int, batch:int, d_model:int,target_vocab_size:int, head: int = 8, d_ff: int =  1024, number_of_block: int = 6, imgSize: int = 224, patch_size: int = 14) -> None:
         super(Transformer, self).__init__()
     
        

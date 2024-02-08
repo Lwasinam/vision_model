@@ -7,6 +7,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader, random_split
 from torch.optim.lr_scheduler import LambdaLR
+from torch.optim.lr_scheduler import StepLR
 
 import warnings
 from tqdm import tqdm
@@ -230,6 +231,7 @@ def train_model(config):
     writer = SummaryWriter(config['experiment_name'])
 
     optimizer = torch.optim.Adam(model.parameters(), lr=config['lr'], eps=1e-9)
+    scheduler = StepLR(optimizer, step_size=1000, gamma=0.95) 
 
     # If the user specified a model to preload before training, load it
     initial_epoch = 0
@@ -285,6 +287,7 @@ def train_model(config):
 
             # Update the weights
             optimizer.step()
+            scheduler.step()
             
 
             global_step += 1
