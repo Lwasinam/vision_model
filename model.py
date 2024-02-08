@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 import math
 import torch.nn.functional as F
-
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class InputEmbeddings(nn.Module):
     def __init__(self, d_model: int, vocab_size: int) -> None:
@@ -157,7 +157,7 @@ class MultiHeadAttention(nn.Module):
         # print(f' mask shape {mask.shape}')
 
         if mask is not None:
-           attention = attention.masked_fill((attention != 0).int().to(device) == 0, -1e9)      
+           attention = attention.masked_fill(mask == 0, -1e9)      
         attention = torch.softmax(attention, dim=-1)      
         if dropout is not None:
             attention = dropout(attention)
