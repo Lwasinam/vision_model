@@ -21,6 +21,7 @@ from tokenizers.trainers import WordLevelTrainer
 from tokenizers.pre_tokenizers import Whitespace
 
 import torchmetrics
+import matplotlib.pyplot as plt
 
 import wandb
 from torch.utils.tensorboard import SummaryWriter
