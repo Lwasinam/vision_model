@@ -287,7 +287,7 @@ def train_model(config):
 
             # Update the weights
             optimizer.step()
-            scheduler.step()
+            # scheduler.step()
             
 
             global_step += 1
