@@ -178,7 +178,7 @@ def get_ds(config):
     # Build tokenizers
     # tokenizer_src = get_or_build_tokenizer(config, ds_raw, config['lang_src'])
     tokenizer_tgt = get_or_build_tokenizer(config, ds_raw)
-    seed = 42  # You can choose any integer as your seed
+    seed = 20  # You can choose any integer as your seed
     torch.manual_seed(seed)
     # Keep 90% for training, 10% for validation
     train_ds_size = int(0.9 * len(ds_raw))

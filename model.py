@@ -123,7 +123,7 @@ class PatchEmbed(nn.Module):
         # batch_size = x.shape[0]
         # cls_tokens = self.cls_token.expand(batch_size, -1, -1)  # Expand CLS tokens for the batch
         # x = torch.cat([cls_tokens, x], dim=1)
-        x = x + self.pos_embed  # Learnable pos embed -> (n_samples, n_patches_embed_dim) 
+        # x = x + self.pos_embed  # Learnable pos embed -> (n_samples, n_patches_embed_dim) 
     
         return x
 class MultiHeadAttention(nn.Module):
@@ -277,7 +277,7 @@ class Decoder(nn.Module):
 
 
 class Transformer(nn.Module):
-    def __init__(self, seq_len:int, batch:int, d_model:int,target_vocab_size:int, head: int = 8, d_ff: int =  1024, number_of_block: int = 6, imgSize: int = 224, patch_size: int = 14) -> None:
+    def __init__(self, seq_len:int, batch:int, d_model:int,target_vocab_size:int, head: int = 8, d_ff: int =  1024, number_of_block: int = 2, imgSize: int = 224, patch_size: int = 14) -> None:
         super(Transformer, self).__init__()
     
        
@@ -297,7 +297,7 @@ class Transformer(nn.Module):
     def encode(self,x, src_mask):
         x  = self.patch_embeddings(x)
         # x = self.source_embedding(x)
-        # x = self.positional_encoding(x)
+        x = self.positional_encoding(x)
         return self.encoder(x, src_mask)
        
     def decode(self,x, src_mask, tgt_mask, encoder_output):
