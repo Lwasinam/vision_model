@@ -32,7 +32,7 @@ class BilingualDataset(Dataset):
         
         src_target_pair = self.ds[idx]
         src_image = src_target_pair['image']
-        tgt_text = src_target_pair['text']
+        tgt_text = src_target_pair['en_text']
 
         if src_image.mode != 'RGB':
             src_image = src_image.convert('RGB')

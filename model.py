@@ -120,9 +120,9 @@ class PatchEmbed(nn.Module):
             )  # (n_samples, embed_dim, n_patches ** 0.5, n_patches ** 0.5)
         x = x.flatten(2)  # (n_samples, embed_dim, n_patches)
         x = x.transpose(1, 2) # (n_samples, n_patches, embed_dim)
-        batch_size = x.shape[0]
-        cls_tokens = self.cls_token.expand(batch_size, -1, -1)  # Expand CLS tokens for the batch
-        x = torch.cat([cls_tokens, x], dim=1)
+        # batch_size = x.shape[0]
+        # cls_tokens = self.cls_token.expand(batch_size, -1, -1)  # Expand CLS tokens for the batch
+        # x = torch.cat([cls_tokens, x], dim=1)
         x = x + self.pos_embed  # Learnable pos embed -> (n_samples, n_patches_embed_dim) 
     
         return x
