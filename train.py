@@ -146,6 +146,7 @@ def plot_grad_flow(named_parameters):
     plt.ylabel("average gradient")
     plt.title("Gradient flow")
     plt.grid(True)
+    plt.savefig('graph.png')
 def batch_iterator(data):
     for i in range(0, len(data)):
         yield data[i]['en_text'] 
