@@ -89,7 +89,7 @@ class PatchEmbed(nn.Module):
         self.patch_size = patch_size
         self.n_patches = (img_size // patch_size) ** 2
         self.pos_embed = nn.Parameter(
-                torch.zeros(1, self.n_patches+1, embed_dim)
+                torch.zeros(1, self.n_patches, embed_dim)
         )
          # Adding CLS token as a learnable parameter
         self.cls_token = nn.Parameter(torch.zeros(1, 1, embed_dim))
